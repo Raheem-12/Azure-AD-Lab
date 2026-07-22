@@ -39,20 +39,91 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 - Group Membership
 
 ### Group Policy
-- Created custom GPOs
-- Linked GPOs to Organizational Units
+- Created and linked custom Group Policy Objects (GPOs)
 
 ### File Services
-- Departmental SMB Shares
+- Departmental SMB File Shares
 - NTFS Permissions
 - Share Permissions
 
 ### PowerShell Automation
 - Import employee data from CSV
-- Loop through employee objects
-- Generate usernames
-- Active Directory automation (in progress)
+- Process employee objects with loops
+- Dynamic username generation
+- User provisioning automation (in progress)
 
 ---
 
 ## Project Structure
+
+```text
+Azure-AD-Lab
+│
+├── Documentation
+├── Screenshots
+├── Scripts
+│   ├── CreateUsers.ps1
+│   ├── ResetPasswords.ps1
+│   ├── DisableInactiveUsers.ps1
+│   ├── UserReport.ps1
+│   └── ...
+│
+└── README.md
+```
+
+---
+
+## Skills Demonstrated
+
+This project demonstrates experience with:
+
+- Azure Administration
+- Windows Server Administration
+- Active Directory Management
+- PowerShell Scripting
+- Infrastructure Automation
+- Git Version Control
+- GitHub
+- Enterprise File Permissions
+- Group Policy Management
+
+---
+
+## Current Progress
+
+- ✅ Azure Infrastructure
+- ✅ Domain Controller Deployment
+- ✅ Active Directory Installation
+- ✅ DNS Configuration
+- ✅ Organizational Units
+- ✅ Users & Groups
+- ✅ Group Policy
+- ✅ SMB File Shares
+- ✅ PowerShell Project Setup
+- 🔄 User Provisioning Automation
+- ⏳ Logging
+- ⏳ Error Handling
+- ⏳ Reporting Scripts
+
+---
+
+## Future Improvements
+
+- Automated Active Directory User Provisioning
+- Password Reset Automation
+- Inactive User Reporting
+- Account Unlock Automation
+- Active Directory Health Checks
+- Logging and Error Handling
+- Azure Monitoring
+- Azure Backup
+
+---
+
+## Author
+
+**Raheem**
+
+Computer Science Student | George Mason University
+
+Building cloud engineering, systems administration, and infrastructure automation projects using Azure, PowerShell, Git, and Windows Server.
