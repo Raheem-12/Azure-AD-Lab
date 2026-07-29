@@ -8,6 +8,42 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 
 ---
 
+## Architecture
+
+                 Azure
+                    │
+         Resource Group
+                    │
+            Virtual Network
+          ┌─────────┴─────────┐
+          │                   │
+      DC-01               CLIENT-01
+          │
+ Active Directory Domain
+      corp.local
+          │
+ ┌───────────────────────────┐
+ │ Organizational Units      │
+ │ Security Groups           │
+ │ Users                     │
+ └───────────────────────────┘
+          │
+      PowerShell
+          │
+ ImportUsers.csv
+          │
+ CreateUsers.ps1
+          │
+ ├── Create Users
+ ├── Assign OU
+ ├── Add Group
+ ├── Log Results
+ └── Skip Duplicates
+
+*Figure 1. High-level architecture of the Azure Active Directory Home Lab, illustrating the Azure infrastructure, Active Directory domain, organizational structure, and PowerShell automation workflow.*
+
+---
+
 ## Technologies Used
 
 - Microsoft Azure
@@ -30,6 +66,8 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 - Virtual Network
 - Domain Controller VM
 - Windows Client VM
+ 
+
 
 ### Active Directory
 - Domain Controller Promotion
