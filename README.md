@@ -137,24 +137,25 @@ This project demonstrates experience with:
 - ✅ Users & Groups
 - ✅ Group Policy
 - ✅ SMB File Shares
-- ✅ PowerShell Project Setup
-- 🔄 User Provisioning Automation
-- ⏳ Logging
-- ⏳ Error Handling
-- ⏳ Reporting Scripts
+- ✅ PowerShell User Provisioning
+- ✅ Automatic OU Assignment
+- ✅ Automatic Security Group Assignment
+- ✅ Duplicate User Detection
+- ✅ Logging
+- ✅ Error Handling
 
 ---
 
 ## Future Improvements
 
-- Automated Active Directory User Provisioning
 - Password Reset Automation
-- Inactive User Reporting
+- Disable Inactive Accounts
 - Account Unlock Automation
-- Active Directory Health Checks
-- Logging and Error Handling
-- Azure Monitoring
+- User Reporting Dashboard
+- Azure Monitor Integration
 - Azure Backup
+- Azure Update Manager
+- Azure Bastion
 
 ---
 
