@@ -10,21 +10,21 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 
 ## Architecture
 
-Azure
-│
-└── Resource Group
-      │
-      └── Virtual Network
-              │
-      ┌───────┴────────┐
-      │                │
-   DC-01           CLIENT-01
-      │
-Active Directory
-      │
-Users
-Groups
-PowerShell
+```mermaid
+flowchart TD
+    A[Microsoft Azure]
+    A --> B[Resource Group]
+    B --> C[Virtual Network]
+    C --> D[DC-01<br/>Windows Server]
+    C --> E[CLIENT-01<br/>Windows Client]
+
+    D --> F[Active Directory Domain Services]
+    F --> G[Organizational Units]
+    G --> H[Users]
+    G --> I[Security Groups]
+
+    J[PowerShell Automation] --> F
+```
 
 ---
 
