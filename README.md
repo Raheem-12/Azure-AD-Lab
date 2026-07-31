@@ -8,6 +8,25 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 
 ---
 
+## Architecture
+
+Azure
+│
+└── Resource Group
+      │
+      └── Virtual Network
+              │
+      ┌───────┴────────┐
+      │                │
+   DC-01           CLIENT-01
+      │
+Active Directory
+      │
+Users
+Groups
+PowerShell
+
+---
 
 ## Technologies Used
 
@@ -49,7 +68,8 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 - Dynamic username generation
 - Duplicate user detection
 - Logging and error handling
---
+
+---
 
 ## Build Walkthrough
 
@@ -117,8 +137,6 @@ Configured department-based security groups to support role-based access control
 
 #### User Provisioning Script
 
-<img width="1009" height="603" alt="image" src="https://github.com/user-attachments/assets/1e9cf1fb-4a2f-43f0-a14a-5d69792b8112" />
-<img width="1051" height="618" alt="image" src="https://github.com/user-attachments/assets/05b25989-aeba-42a0-a577-5d3caec00de6" />
 <img width="1171" height="744" alt="image" src="https://github.com/user-attachments/assets/6be5f195-41af-48f0-8263-d328da2d973a" />
 <img width="380" height="205" alt="image" src="https://github.com/user-attachments/assets/4ee2ee39-c37f-4dc6-b164-532e0a44ebf2" />
 
@@ -150,7 +168,21 @@ Implemented logging to record provisioning activity, successful account creation
 Verified that newly created users were automatically assigned to the appropriate department security groups using PowerShell.
 
 ---
+## Project Outcomes
 
+Successfully deployed an enterprise-style Active Directory environment in Microsoft Azure.
+
+Implemented:
+
+- Azure Resource Group
+- Virtual Network
+- Windows Server Domain Controller
+- Active Directory Domain Services
+- Organizational Units
+- Department-based Security Groups
+- Automated user provisioning using PowerShell
+- Duplicate-user detection
+- Automated logging
 
 ---
 
@@ -166,7 +198,6 @@ Azure-AD-Lab
 │   ├── ResetPasswords.ps1
 │   ├── DisableInactiveUsers.ps1
 │   ├── UserReport.ps1
-│   └── ...
 │
 └── README.md
 ```
@@ -197,8 +228,6 @@ This project demonstrates experience with:
 - ✅ DNS Configuration
 - ✅ Organizational Units
 - ✅ Users & Groups
-- ✅ Group Policy
-- ✅ SMB File Shares
 - ✅ PowerShell User Provisioning
 - ✅ Automatic OU Assignment
 - ✅ Automatic Security Group Assignment
