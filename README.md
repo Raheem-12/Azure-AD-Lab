@@ -34,8 +34,6 @@ flowchart TD
 - Windows Server 2022
 - Active Directory Domain Services (AD DS)
 - DNS
-- Group Policy
-- SMB File Shares
 - PowerShell
 - Git
 - GitHub
