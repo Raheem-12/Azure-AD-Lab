@@ -26,6 +26,12 @@ The goal of this project is to simulate the responsibilities of a Cloud Engineer
 
 ## Features Implemented
 
+--
+
+## Build Walkthrough 
+
+<img width="1872" height="745" alt="image" src="https://github.com/user-attachments/assets/5196e547-3ce3-4c28-92a1-3d4bc84647b6" />
+
 ### Azure Infrastructure
 - Azure Resource Group
 - Virtual Network
