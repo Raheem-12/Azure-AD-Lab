@@ -39,11 +39,23 @@ resource "azurerm_subnet" "default" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
-# Defines the Network Security Group for the domain controller/
+# Defines the Network Security Group for the domain controller.
 resource "azurerm_network_security_group" "dc_nsg" {
   name                = "DC-01-nsg"
   location            = "eastus2"
   resource_group_name = azurerm_resource_group.ad_lab.name
+
+  security_rule {
+    name                       = "RDP"
+    priority                   = 300
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 # Defines the Network Security Group for the client VM.
@@ -51,6 +63,18 @@ resource "azurerm_network_security_group" "client_nsg" {
   name                = "CLIENT-01-nsg"
   location            = "eastus2"
   resource_group_name = azurerm_resource_group.ad_lab.name
+
+  security_rule {
+    name                       = "RDP"
+    priority                   = 300
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
 }
 
 
@@ -118,6 +142,7 @@ resource "azurerm_windows_virtual_machine" "dc_vm" {
 
   automatic_updates_enabled = true
 
+  patch_mode     = "AutomaticByPlatform"
   reboot_setting = "IfRequired"
 
   additional_capabilities {
@@ -129,6 +154,17 @@ resource "azurerm_windows_virtual_machine" "dc_vm" {
 
 #############################
 
+# Defines the public IP used to RDP into CLIENT-01.
+resource "azurerm_public_ip" "client_public_ip" {
+  name                = "CLIENT-01-ip"
+  location            = "eastus2"
+  resource_group_name = azurerm_resource_group.ad_lab.name
+
+  allocation_method = "Static"
+  sku               = "Standard"
+  ip_version        = "IPv4"
+}
+
 # Defines the network interface for CLIENT-01.
 resource "azurerm_network_interface" "client_nic" {
   name                = "CLIENT-01-nic"
@@ -139,6 +175,7 @@ resource "azurerm_network_interface" "client_nic" {
     name                          = "ipconfig1"
     subnet_id                     = azurerm_subnet.default.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.client_public_ip.id
   }
 }
 
