@@ -15,11 +15,13 @@ Raheem
 2026-07-22
 #>
 
+Import-Module ActiveDirectory
+
 # CSV file location
 $CsvPath = Join-Path $PSScriptRoot "ImportUsers.csv"
 
-# Default password
-$DefaultPassword = ConvertTo-SecureString "P@ssword123!" -AsPlainText -Force
+# Prompt securely for the default password
+$DefaultPassword = Read-Host "Enter default password for new AD users" -AsSecureString
 
 # Import employee data
 Write-Host "Using CSV path: $CsvPath"
@@ -52,17 +54,108 @@ function Get-OUPath {
         default {
             return $null
         }
-
     }
-
 }
 
-# Test the OU path function for each employee
-foreach ($employee in $employees) {
-    $ouPath = Get-OUPath -Department $employee.Department
+function Get-SecurityGroup {
 
-    Write-Host "Employee: $($employee.FirstName) $($employee.LastName)"
-    Write-Host "Department: $($employee.Department)"
-    Write-Host "OU Path: $ouPath"
-    Write-Host "------------------------------"
+    param(
+        [string]$Department
+    )
+
+    switch ($Department) {
+
+        "IT" {
+            return "IT-SG"
+        }
+
+        "HR" {
+            return "HR-SG"
+        }
+
+        "Finance" {
+            return "Finance-SG"
+        }
+
+        "Sales" {
+            return "Sales-SG"
+        }
+
+        default {
+            return $null
+        }
+    }
+}
+
+foreach ($employee in $employees) {
+
+    $FirstName  = $employee.FirstName
+    $LastName   = $employee.LastName
+    $Department = $employee.Department
+
+    # Example username: John Smith -> jsmith
+    $Username = (
+        $FirstName.Substring(0,1) + $LastName
+    ).ToLower()
+
+    $OUPath = Get-OUPath -Department $Department
+    $Group  = Get-SecurityGroup -Department $Department
+
+    if (-not $OUPath) {
+        Write-Warning "Unknown department for $FirstName $LastName. Skipping."
+        continue
+    }
+
+    # Check whether the user already exists
+    $ExistingUser = Get-ADUser `
+        -Filter "SamAccountName -eq '$Username'" `
+        -ErrorAction SilentlyContinue
+
+    if ($ExistingUser) {
+
+        Write-Host "User already exists: $Username"
+
+    }
+    else {
+
+        New-ADUser `
+            -Name "$FirstName $LastName" `
+            -GivenName $FirstName `
+            -Surname $LastName `
+            -SamAccountName $Username `
+            -UserPrincipalName "$Username@corp.local" `
+            -Path $OUPath `
+            -Department $Department `
+            -AccountPassword $DefaultPassword `
+            -Enabled $true `
+            -ChangePasswordAtLogon $true
+
+        Write-Host "Created user: $Username"
+    }
+
+    # Add user to department security group
+    if ($Group) {
+
+        $AlreadyMember = Get-ADGroupMember `
+            -Identity $Group `
+            -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.SamAccountName -eq $Username
+            }
+
+        if (-not $AlreadyMember) {
+
+            Add-ADGroupMember `
+                -Identity $Group `
+                -Members $Username
+
+            Write-Host "Added $Username to $Group"
+        }
+        else {
+
+            Write-Host "$Username is already a member of $Group"
+        }
+    }
+
+    Write-Host "----------------------------------"
 }
