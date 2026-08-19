@@ -11,3 +11,4 @@
 # Terraform crash logs
 crash.log
 crash.*.log
+*.rdp
