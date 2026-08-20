@@ -115,23 +115,61 @@ foreach ($employee in $employees) {
 
         Write-Host "User already exists: $Username"
 
+	$UserDetails = Get-ADUser `
+		-Identity $Username `
+		-Properties Enabled, PasswordLastSet
+
+	if (-not $UserDetails.Enabled -or -not $UserDetails.PasswordLastSet) {
+		
+		try {
+		    Set-ADAccountPassword `
+			-Identity $Username `
+			-NewPassword  $DefaultPassword `
+			-Reset `
+			-ErrorAction Stop
+
+		    Enable-ADAccount `
+	   	        -Identity $Username `
+			-ErrorAction Stop
+
+		   Write-Host "Repaired and enabled user: $Username"
+
+	       }
+               catch {
+		   Write-Host "Failed to repair user: $Username"
+	     	   Write-Host "Error: $($_.Exception.Message)"
+		   continue
+		}
+	}
+
     }
     else {
+	try {
 
-        New-ADUser `
-            -Name "$FirstName $LastName" `
-            -GivenName $FirstName `
-            -Surname $LastName `
-            -SamAccountName $Username `
-            -UserPrincipalName "$Username@corp.local" `
-            -Path $OUPath `
-            -Department $Department `
-            -AccountPassword $DefaultPassword `
-            -Enabled $true `
-            -ChangePasswordAtLogon $true
+            New-ADUser `
+            	-Name "$FirstName $LastName" `
+            	-GivenName $FirstName `
+            	-Surname $LastName `
+            	-SamAccountName $Username `
+            	-UserPrincipalName "$Username@corp.local" `
+            	-Path $OUPath `
+            	-Department $Department `
+            	-AccountPassword $DefaultPassword `
+            	-Enabled $true `
+            	-ChangePasswordAtLogon $true `
+		-ErrorAction Stop
 
-        Write-Host "Created user: $Username"
+             Write-Host "Created user: $Username"
+    
+	}
+	catch {
+		Write-Host "Failed to create user: $Username"
+		Write-Host "Error: $($_.Exception.Message)"
+		continue
+	}
+	
     }
+
 
     # Add user to department security group
     if ($Group) {
