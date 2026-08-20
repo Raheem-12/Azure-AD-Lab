@@ -31,10 +31,14 @@ flowchart TD
 ## Technologies Used
 
 - Microsoft Azure
+- Terraform
+- Infrastructure as Code (IaC)
 - Windows Server 2022
+- Windows 11
 - Active Directory Domain Services (AD DS)
 - DNS
 - PowerShell
+- SMB File Sharing
 - Git
 - GitHub
 - Visual Studio Code
@@ -43,11 +47,19 @@ flowchart TD
 
 ## Features Implemented
 
-### Azure Infrastructure
-- Provisioned Azure Resource Group
-- Configured Virtual Network
-- Deployed Windows Server Domain Controller
-- Configured Azure networking
+### Azure Infrastructure & Terraform
+
+- Provisioned and managed Azure infrastructure using Terraform
+- Configured Azure Resource Group
+- Configured Virtual Network and Subnet
+- Configured Network Security Groups (NSGs)
+- Configured Public IP addresses and Network Interfaces
+- Deployed Windows Server Domain Controller (`DC-01`)
+- Deployed Windows 11 client (`CLIENT-01`)
+- Configured DC-01 with static private IP `10.0.0.4`
+- Configured the virtual network to use DC-01 for DNS
+- Managed existing Azure resources using Terraform state and resource imports
+- Destroyed and successfully rebuilt the Azure environment from Infrastructure as Code
 
 ### Active Directory
 - Installed Active Directory Domain Services (AD DS)
@@ -97,7 +109,45 @@ Deployed a Windows Server virtual machine (`DC-01`) that serves as the Domain Co
 
 ---
 
-### 2. Active Directory Configuration
+### 2. Terraform Infrastructure as Code
+
+After initially building the Azure environment, I converted the underlying infrastructure to Terraform to make the lab reproducible and manageable as Infrastructure as Code (IaC).
+
+Terraform manages the core Azure infrastructure, including:
+
+- Resource Group
+- Virtual Network
+- Subnet
+- Network Security Groups
+- Public IP addresses
+- Network Interfaces
+- DC-01 Windows Server VM
+- CLIENT-01 Windows 11 VM
+- Static private IP configuration for DC-01
+- DNS configuration
+
+The infrastructure was managed using the standard Terraform workflow:
+
+```bash
+terraform init
+terraform fmt
+terraform validate
+terraform plan
+terraform apply
+```
+
+Existing Azure resources were imported into Terraform state while converting the original manually deployed environment to Infrastructure as Code.
+
+After completing the Terraform configuration, I destroyed and reprovisioned the Azure infrastructure to verify that the environment could be recreated from code.
+
+During the rebuild, I troubleshot Azure networking and Terraform state issues, including importing an existing Azure resource into Terraform state after an Azure operation partially completed.
+
+This demonstrated the ability to manage the infrastructure lifecycle using Terraform rather than relying only on manual Azure Portal configuration.
+
+---
+---
+
+### 3. Active Directory Configuration
 
 #### Domain Controller Verification
 
@@ -131,7 +181,7 @@ Configured department-based security groups to support role-based access control
 
 ---
 
-### 3. PowerShell Automation
+### 4. PowerShell Automation
 
 #### User Provisioning Script
 
@@ -140,6 +190,49 @@ Configured department-based security groups to support role-based access control
 
 
 Developed a PowerShell automation script that imports employee information from a CSV file, generates usernames, creates Active Directory user accounts, assigns each user to the correct Organizational Unit, adds them to the appropriate security group, and records all actions in a log file.
+
+---
+
+### 5. Client Domain Join & Authentication Validation
+
+After configuring Active Directory, CLIENT-01 was configured to use the Domain Controller at `10.0.0.4` as its DNS server and joined to the `corp.local` domain.
+
+DNS connectivity between CLIENT-01 and DC-01 was verified before performing the domain join.
+
+The domain trust relationship was validated using PowerShell:
+
+```powershell
+Test-ComputerSecureChannel
+```
+
+The command returned:
+
+```text
+True
+```
+
+confirming that CLIENT-01 maintained a valid secure channel with the `corp.local` domain.
+
+Finally, a provisioned Active Directory user successfully authenticated to CLIENT-01.
+
+```powershell
+whoami
+# corp\jsmith
+
+$env:USERDOMAIN
+# CORP
+
+$env:USERNAME
+# jsmith
+```
+<img width="452" height="273" alt="image" src="https://github.com/user-attachments/assets/f759c4f0-99e1-4422-b60a-662562638666" />
+
+
+This validated the complete deployment workflow:
+
+**Terraform → Azure Infrastructure → PowerShell Automation → Active Directory → Domain Join → Domain User Authentication**
+
+
 
 ---
 
@@ -168,19 +261,27 @@ Verified that newly created users were automatically assigned to the appropriate
 ---
 ## Project Outcomes
 
-Successfully deployed an enterprise-style Active Directory environment in Microsoft Azure.
+Successfully deployed, automated, destroyed, rebuilt, and validated an enterprise-style Active Directory environment in Microsoft Azure.
 
 Implemented:
 
-- Azure Resource Group
-- Virtual Network
+- Azure infrastructure provisioning with Terraform
+- Infrastructure as Code (IaC)
+- Azure Virtual Network and Subnet
+- Network Security Groups
 - Windows Server Domain Controller
+- Windows 11 domain client
 - Active Directory Domain Services
+- `corp.local` domain
+- DNS configuration
 - Organizational Units
 - Department-based Security Groups
-- Automated user provisioning using PowerShell
-- Duplicate-user detection
-- Automated logging
+- CSV-based user provisioning with PowerShell
+- Automated security group assignment
+- Department SMB file shares
+- Client domain join
+- Active Directory domain authentication
+- Terraform state management and resource importing
 
 ---
 
@@ -204,17 +305,22 @@ Azure-AD-Lab
 
 ## Skills Demonstrated
 
-This project demonstrates experience with:
-
-- Azure Administration
+- Microsoft Azure Administration
+- Terraform
+- Infrastructure as Code (IaC)
+- Terraform State Management
+- Azure Virtual Networking
+- Network Security Groups
 - Windows Server Administration
-- Active Directory Management
+- Active Directory Domain Services
+- DNS Configuration
+- Domain Join & Authentication
 - PowerShell Scripting
-- Infrastructure Automation
+- Automated User Provisioning
+- SMB File Sharing
+- Infrastructure Troubleshooting
 - Git Version Control
 - GitHub
-- Enterprise File Permissions
-- Group Policy Management
 
 ---
 
